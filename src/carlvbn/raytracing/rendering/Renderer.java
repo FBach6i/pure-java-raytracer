@@ -4,6 +4,7 @@ import carlvbn.raytracing.pixeldata.Color;
 import carlvbn.raytracing.pixeldata.GaussianBlur;
 import carlvbn.raytracing.pixeldata.PixelBuffer;
 import carlvbn.raytracing.pixeldata.PixelData;
+import carlvbn.raytracing.rendering.sampler.SingleRaySampler;
 import carlvbn.raytracing.math.*;
 import carlvbn.raytracing.solids.Solid;
 
@@ -45,12 +46,17 @@ public class Renderer {
      * @param resolution (Floating point greater than 0 and lower or equal to 1) Controls the number of rays traced. (1 = Every pixel is ray-traced)
      */
     public static void renderScene(Scene scene, Graphics gfx, int width, int height, float resolution) {
+        renderScene(scene, new SingleRaySampler(), gfx, width, height, resolution);
+    }
+
+    public static void renderScene(Scene scene, PixelSampler sampler, Graphics gfx, int width, int height, float resolution) {
         int blockSize = (int) (1/resolution);
+        sampler.setPixelBlockSize(blockSize);
 
         for (int x = 0; x<width; x+=blockSize) {
             for (int y = 0; y<height; y+=blockSize) {
                 float[] uv = getNormalizedScreenCoordinates(x, y, width, height);
-                PixelData pixelData = computePixelInfo(scene, uv[0], uv[1]);
+                PixelData pixelData = sampler.samplePixel(scene, uv[0], uv[1]);
 
                 gfx.setColor(pixelData.getColor().toAWTColor());
                 gfx.fillRect(x, y, blockSize, blockSize);
