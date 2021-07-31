@@ -272,10 +272,15 @@ public class SettingsPanel extends JPanel {
         this.add(lbSkybox);
 
         cbScene = new JComboBox<String>();
+        cbScene.addItem("Small Spheres-Triangle");
+        cbScene.addItem("Small Spheres-Triangle with Checkboard");
+        cbScene.addItem("Large Spheres-Triangle");
+        cbScene.addItem("Large Spheres-Triangle with Checkboard");
         cbScene.addItem("RGB Spheres");
         cbScene.addItem("RT Demo");
         cbScene.addItem("Mirror spheres");
         cbScene.addItem("Random spheres");
+        cbScene.setSelectedIndex(4);
         gbc.gridx = 0;
         gbc.gridy = 15;
         gbc.gridwidth = 1;
@@ -464,7 +469,31 @@ public class SettingsPanel extends JPanel {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 Scene scene = viewport.getScene();
                 switch (cbScene.getSelectedIndex()) {
-                    case 0: // RGB Spheres
+                    case 0:
+                        scene.clearSolids();
+                        populateSphereTriangle(scene, 3);
+
+                        scene.addSolid(new Plane(-1F, Color.GRAY, false,0.25F, 0F));
+                        break;
+                    case 1:
+                        scene.clearSolids();
+                        populateSphereTriangle(scene, 3);
+
+                        scene.addSolid(new Plane(-1F, new Color(0, 0, 0), true,0.25F, 0F));
+                        break;
+                    case 2:
+                        scene.clearSolids();
+                        populateSphereTriangle(scene, 7);
+
+                        scene.addSolid(new Plane(-1F, Color.GRAY, false,0.25F, 0F));
+                        break;
+                    case 3:
+                        scene.clearSolids();
+                        populateSphereTriangle(scene, 7);
+
+                        scene.addSolid(new Plane(-1F, new Color(0, 0, 0), true,0.25F, 0F));
+                        break;
+                    case 4: // RGB Spheres
                         scene.clearSolids();
                         scene.addSolid(new Sphere(new Vector3(-1, 0, 0), 0.4F, Color.RED, 0.4F, 0F));
                         scene.addSolid(new Sphere(new Vector3(0, 0, 0), 0.4F, Color.GREEN, 0.4F, 0F));
@@ -472,7 +501,7 @@ public class SettingsPanel extends JPanel {
 
                         scene.addSolid(new Plane(-1F, new Color(0, 0, 0), true,0.25F, 0F));
                         break;
-                    case 1: // RT Demo
+                    case 5: // RT Demo
                         scene.clearSolids();
                         scene.addSolid(new Sphere(new Vector3(0F, -0.6F, 0F), 0.4F, Color.WHITE, 0.2F, 0F));
                         scene.addSolid(new Sphere(new Vector3(1F, -0.7F, -0.5F), 0.3F, new Color(0.5F, 0, 1F), 0.2F, 0F));
@@ -482,17 +511,17 @@ public class SettingsPanel extends JPanel {
 
                         scene.addSolid(new Plane(-1F, new Color(0, 0, 0), true,0.25F, 0F));
                         break;
-                    case 2: // Mirror spheres
+                    case 6: // Mirror spheres
                         scene.clearSolids();
                         for (int i = -5; i<=5; i++) {
                             for (int j = -5; j<=5; j++) {
                                 scene.addSolid(new Sphere(new Vector3(i, 0, j), 0.4F, Color.WHITE, 1F, 0F));
                             }
                         }
-
+            
                         scene.addSolid(new Plane(-1F, new Color(0, 0, 0), true,0.25F, 0F));
                         break;
-                    case 3: // Random spheres
+                    case 7: // Random spheres
                         scene.clearSolids();
                         Random rand = new Random();
                         for (int i = 0; i<100; i++) {
@@ -576,6 +605,29 @@ public class SettingsPanel extends JPanel {
         lbBloomRadius.setEnabled(false);
         lbBloomIntensity.setEnabled(false);
     }
+
+    private void populateSphereTriangle(Scene scene, int triangleEdgeSize) {
+        int numberofSpheresOnEachSide = triangleEdgeSize/2;
+
+        scene.addSolid(new Sphere(new Vector3(0F, 0F, 0F), 0.4F, Color.WHITE, 1F, 0F));
+
+        Vector3 leftSideOffset = new Vector3(0.5F, 0F, 0.866F);
+        Vector3 rightSideOffset = new Vector3(-0.5F, 0F, 0.866F);
+
+        for (int i = 1; i <= numberofSpheresOnEachSide; i++) {
+            // draw left side
+            scene.addSolid(new Sphere(new Vector3(-(float)i,0F,0F), 0.4F, Color.WHITE, 1F, 0F));    
+            for (int j = 1; j <= (i*2); j++) {
+                scene.addSolid(new Sphere(new Vector3(-(float)i,0F,0F).add(leftSideOffset.multiply(j)), 0.4F, Color.WHITE, 1F, 0F));    
+            }
+            // draw right side
+            scene.addSolid(new Sphere(new Vector3((float)i,0F,0F), 0.4F, Color.WHITE, 1F, 0F));    
+            for (int j = 1; j <= (i*2)-1; j++) {
+                scene.addSolid(new Sphere(new Vector3((float)i,0F,0F).add(rightSideOffset.multiply(j)), 0.4F, Color.WHITE, 1F, 0F));    
+            } 
+        }
+    }
+
 
     public int getOutputWidth() {
         return (int) spImageWidth.getValue();
