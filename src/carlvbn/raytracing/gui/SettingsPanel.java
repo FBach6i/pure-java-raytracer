@@ -498,7 +498,6 @@ public class SettingsPanel extends JPanel {
                         break;
                     case 3:
                         scene.clearSolids();
-                        scene.clearSolids();
                         scene.getCamera().setPosition(new Vector3(0.25F,1.5F,-1.5F));
                         scene.getCamera().setPitch(20F);
                         scene.getCamera().setYaw(10F);
