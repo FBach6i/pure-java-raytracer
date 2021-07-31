@@ -9,8 +9,7 @@ public class SingleRaySampler implements PixelSampler {
 
     @Override
     public void setPixelBlockSize(float blockSize) {
-        ; // no significance for the single-ray sampler 
-        
+        ; // no significance for the single-ray sampler
     }
 
     @Override
