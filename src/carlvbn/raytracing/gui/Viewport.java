@@ -38,6 +38,8 @@ public class Viewport extends JPanel {
     private float cameraPitch;
     private Vector3 cameraPosition;
 
+    private Renderer _renderer;
+
     public Viewport(JFrame container, JDialog settingsDialog) {
         setFocusable(true);
         addKeyListener(new KeyAdapter() {
@@ -161,6 +163,14 @@ public class Viewport extends JPanel {
         BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
         blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
     }
+    
+    public void setRenderer(Renderer renderer) {
+        _renderer = renderer;
+    }
+
+    public Renderer getRenderer() {
+        return _renderer; 
+    }
 
     public void runMainLoop() {
         while (true) {
@@ -176,8 +186,8 @@ public class Viewport extends JPanel {
             }
 
             BufferedImage tempBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-            if (postProcessing) Renderer.renderScenePostProcessed(scene, tempBuffer.getGraphics(), getWidth(), getHeight(), resolution);
-            else Renderer.renderScene(scene, tempBuffer.getGraphics(), getWidth(), getHeight(), resolution);
+            if (postProcessing) _renderer.renderScenePostProcessed(scene, tempBuffer.getGraphics(), getWidth(), getHeight(), resolution);
+            else _renderer.renderScene(scene, tempBuffer.getGraphics(), getWidth(), getHeight(), resolution);
             frameBuffer = tempBuffer;
 
             repaint();
@@ -252,7 +262,7 @@ public class Viewport extends JPanel {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         System.out.println("Rendering to image...");
         if (postProcessing) Renderer.renderScenePostProcessed(scene, image.getGraphics(), width, height, 1F);
-        else Renderer.renderScene(scene, image.getGraphics(), width, height, 1F);
+        else _renderer.renderScene(scene, image.getGraphics(), width, height, 1F);
 
         File imgFile = new File("output.png");
         ImageIO.write(image, "PNG", new FileOutputStream(imgFile));

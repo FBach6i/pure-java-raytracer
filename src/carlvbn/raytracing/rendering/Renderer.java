@@ -1,14 +1,16 @@
 package carlvbn.raytracing.rendering;
 
+import java.awt.Graphics;
+
+import carlvbn.raytracing.math.Ray;
+import carlvbn.raytracing.math.RayHit;
+import carlvbn.raytracing.math.Vector3;
 import carlvbn.raytracing.pixeldata.Color;
 import carlvbn.raytracing.pixeldata.GaussianBlur;
 import carlvbn.raytracing.pixeldata.PixelBuffer;
 import carlvbn.raytracing.pixeldata.PixelData;
 import carlvbn.raytracing.rendering.sampler.SingleRaySampler;
-import carlvbn.raytracing.math.*;
 import carlvbn.raytracing.solids.Solid;
-
-import java.awt.Graphics;
 
 public class Renderer {
     private static final float GLOBAL_ILLUMINATION = 0.3F;
@@ -18,6 +20,16 @@ public class Renderer {
 
     public static float bloomIntensity = 0.5F;
     public static int bloomRadius = 10;
+
+    private PixelSampler _pixelSampler;
+
+    public Renderer() {
+        _pixelSampler = new SingleRaySampler();
+    }
+
+    public void setPixelSampler(PixelSampler sampler) {
+        _pixelSampler = sampler;
+    }
 
     /** Renders the scene to a Pixel buffer
      * @param scene The scene to Render
@@ -45,13 +57,15 @@ public class Renderer {
      * @param height The height of the desired output
      * @param resolution (Floating point greater than 0 and lower or equal to 1) Controls the number of rays traced. (1 = Every pixel is ray-traced)
      */
-    public static void renderScene(Scene scene, Graphics gfx, int width, int height, float resolution) {
-        renderScene(scene, new SingleRaySampler(), gfx, width, height, resolution);
+    public void renderScene(Scene scene, Graphics gfx, int width, int height, float resolution) {
+        //renderScene(scene, new SuperSampler(), gfx, width, height, resolution);
+        renderScene(scene, _pixelSampler, gfx, width, height, resolution);
     }
 
     public static void renderScene(Scene scene, PixelSampler sampler, Graphics gfx, int width, int height, float resolution) {
         int blockSize = (int) (1/resolution);
-        sampler.setPixelBlockSize(blockSize);
+        //sampler.setPixelBlockSize(0.2F);
+        sampler.setPixelBlockSize(0.0029391804F);
 
         for (int x = 0; x<width; x+=blockSize) {
             for (int y = 0; y<height; y+=blockSize) {

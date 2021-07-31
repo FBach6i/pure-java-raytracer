@@ -3,6 +3,7 @@ package carlvbn.raytracing;
 import carlvbn.raytracing.gui.AnimationPanel;
 import carlvbn.raytracing.gui.SettingsPanel;
 import carlvbn.raytracing.gui.Viewport;
+import carlvbn.raytracing.rendering.Renderer;
 
 import javax.swing.*;
 
@@ -35,6 +36,8 @@ public class Main {
 
         JDialog animationDialog = new JDialog(frame, "Animation");
 
+
+
         SettingsPanel settingsPanel = new SettingsPanel(viewport, animationDialog);
 
         animationDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -47,6 +50,7 @@ public class Main {
         settingsDialog.add(settingsPanel);
         settingsDialog.setVisible(true);
 
+        viewport.setRenderer(new Renderer());
         viewport.runMainLoop();
     }
 }

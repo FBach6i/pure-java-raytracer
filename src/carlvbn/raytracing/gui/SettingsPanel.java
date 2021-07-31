@@ -1,21 +1,37 @@
 package carlvbn.raytracing.gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ItemEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.Random;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
+
 import carlvbn.raytracing.math.Vector3;
 import carlvbn.raytracing.pixeldata.Color;
 import carlvbn.raytracing.rendering.Renderer;
 import carlvbn.raytracing.rendering.Scene;
 import carlvbn.raytracing.rendering.Skybox;
+import carlvbn.raytracing.rendering.sampler.SingleRaySampler;
 import carlvbn.raytracing.solids.Plane;
 import carlvbn.raytracing.solids.Sphere;
-
-import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileFilter;
-import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.Random;
+import fbach6i.raytracing.rendering.sampler.SuperSampler;
 
 public class SettingsPanel extends JPanel {
     private int selectedSkyboxIndex;
@@ -36,6 +52,8 @@ public class SettingsPanel extends JPanel {
         JLabel lbFOV;
         JSlider sdFOV;
         JLabel lbSkybox, lbScene;
+        JLabel lbSampler;
+        JComboBox<String> cbSampler;
         JComboBox<String> cbScene, cbSkybox;
         JLabel lbOutRes;
         JButton btnRenderImage, btnShowAnimationDialog;
@@ -258,6 +276,37 @@ public class SettingsPanel extends JPanel {
         gbPanel0.setConstraints(lbScene, gbc);
         this.add(lbScene);
 
+        lbSampler = new JLabel("Sampler");
+        gbc.gridx = 0;
+        gbc.gridy = 17;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(0,5,0,0);
+        gbPanel0.setConstraints(lbSampler, gbc);
+        this.add(lbSampler);
+
+        cbSampler = new JComboBox<String>();
+        cbSampler.addItem("Single Ray Sampler");
+        cbSampler.addItem("Multi Ray Sampler - Supersampler");
+        cbSampler.addItem("Multi Ray Sampler - Adaptive Supersampler");
+        cbSampler.addItem("Multi Ray Sampler - Stochastic Supersampler");
+        cbSampler.setSelectedIndex(0);
+        gbc.gridx = 0;
+        gbc.gridy = 18;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 0;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(0,5,5,2);
+        gbPanel0.setConstraints(cbSampler, gbc);
+        this.add(cbSampler);
+
         lbSkybox = new JLabel("Skybox");
         gbc.gridx = 1;
         gbc.gridy = 14;
@@ -313,7 +362,7 @@ public class SettingsPanel extends JPanel {
 
         cbxPostProcessing = new JCheckBox("Post-processing");
         gbc.gridx = 0;
-        gbc.gridy = 16;
+        gbc.gridy = 21;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -326,7 +375,7 @@ public class SettingsPanel extends JPanel {
 
         lbBloomRadius = new JLabel("Bloom radius");
         gbc.gridx = 0;
-        gbc.gridy = 17;
+        gbc.gridy = 22;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -342,7 +391,7 @@ public class SettingsPanel extends JPanel {
         sdBloomRadius.setMaximum(50);
         sdBloomRadius.setValue(10);
         gbc.gridx = 0;
-        gbc.gridy = 18;
+        gbc.gridy = 23;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -354,7 +403,7 @@ public class SettingsPanel extends JPanel {
 
         lbBloomIntensity = new JLabel("Bloom intensity");
         gbc.gridx = 0;
-        gbc.gridy = 19;
+        gbc.gridy = 24;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -370,7 +419,7 @@ public class SettingsPanel extends JPanel {
         sdBloomIntensity.setMaximum(100);
         sdBloomIntensity.setValue(50);
         gbc.gridx = 0;
-        gbc.gridy = 20;
+        gbc.gridy = 25;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -382,7 +431,7 @@ public class SettingsPanel extends JPanel {
 
         lbOutRes = new JLabel("Output resolution");
         gbc.gridx = 0;
-        gbc.gridy = 21;
+        gbc.gridy = 26;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -397,7 +446,7 @@ public class SettingsPanel extends JPanel {
         spImageWidth = new JSpinner(spImageWidthModel);
         spImageWidth.setEditor(new JSpinner.NumberEditor(spImageWidth, "#"));
         gbc.gridx = 0;
-        gbc.gridy = 22;
+        gbc.gridy = 27;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -412,7 +461,7 @@ public class SettingsPanel extends JPanel {
         spImageHeight = new JSpinner(spImageHeightModel);
         spImageHeight.setEditor(new JSpinner.NumberEditor(spImageHeight, "#"));
         gbc.gridx = 1;
-        gbc.gridy = 22;
+        gbc.gridy = 27;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -425,7 +474,7 @@ public class SettingsPanel extends JPanel {
 
         btnRenderImage = new JButton("Render image");
         gbc.gridx = 0;
-        gbc.gridy = 23;
+        gbc.gridy = 29;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -438,7 +487,7 @@ public class SettingsPanel extends JPanel {
 
         btnShowAnimationDialog = new JButton("Show animation dialog");
         gbc.gridx = 0;
-        gbc.gridy = 24;
+        gbc.gridy = 30;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -580,6 +629,22 @@ public class SettingsPanel extends JPanel {
 
                 } else {
                     cbSkybox.setSelectedIndex(selectedSkyboxIndex);
+                }
+            }
+        });
+
+        cbSampler.addItemListener(e -> {
+            Renderer renderer = viewport.getRenderer();
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                switch (cbSampler.getSelectedIndex()) {
+                    case 0:
+                        renderer.setPixelSampler(new SingleRaySampler());
+                        break;
+                    case 1: 
+                        renderer.setPixelSampler(new SuperSampler());
+                        break;
+                    default:
+                        break;
                 }
             }
         });

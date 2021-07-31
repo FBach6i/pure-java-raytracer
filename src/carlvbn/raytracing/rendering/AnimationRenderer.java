@@ -1,12 +1,14 @@
 package carlvbn.raytracing.rendering;
 
-import carlvbn.raytracing.math.Vector3;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import carlvbn.raytracing.math.Vector3;
+import carlvbn.raytracing.rendering.sampler.SingleRaySampler;
 
 public class AnimationRenderer {
     private static Vector3 firstPosition;
@@ -41,8 +43,11 @@ public class AnimationRenderer {
             cam.setPitch(pitch);
             BufferedImage frameBuffer = new BufferedImage(outputWidth, outputHeight, BufferedImage.TYPE_INT_RGB);
 
+            Renderer renderer = new Renderer();
+            renderer.setPixelSampler(new SingleRaySampler());
+
             if (postProcessing) Renderer.renderScenePostProcessed(scene, frameBuffer.getGraphics(), outputWidth, outputHeight, resolution);
-            else Renderer.renderScene(scene, frameBuffer.getGraphics(), outputWidth, outputHeight, resolution);
+            else renderer.renderScene(scene, frameBuffer.getGraphics(), outputWidth, outputHeight, resolution);
 
             ImageIO.write(frameBuffer, "PNG", new File(outputDirectory, frame+".png"));
 
