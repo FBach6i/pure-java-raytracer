@@ -471,24 +471,37 @@ public class SettingsPanel extends JPanel {
                 switch (cbScene.getSelectedIndex()) {
                     case 0:
                         scene.clearSolids();
+                        scene.getCamera().setPosition(new Vector3(0.25F,1.5F,-1.5F));
+                        scene.getCamera().setPitch(20F);
+                        scene.getCamera().setYaw(10F);
                         populateSphereTriangle(scene, 3);
-
+                        
                         scene.addSolid(new Plane(-1F, Color.GRAY, false,0.25F, 0F));
                         break;
                     case 1:
                         scene.clearSolids();
+                        scene.getCamera().setPosition(new Vector3(0.25F,1.5F,-1.5F));
+                        scene.getCamera().setPitch(20F);
+                        scene.getCamera().setYaw(10F);
                         populateSphereTriangle(scene, 3);
 
                         scene.addSolid(new Plane(-1F, new Color(0, 0, 0), true,0.25F, 0F));
                         break;
                     case 2:
                         scene.clearSolids();
+                        scene.getCamera().setPosition(new Vector3(0.25F,1.5F,-1.5F));
+                        scene.getCamera().setPitch(20F);
+                        scene.getCamera().setYaw(10F);
                         populateSphereTriangle(scene, 7);
 
                         scene.addSolid(new Plane(-1F, Color.GRAY, false,0.25F, 0F));
                         break;
                     case 3:
                         scene.clearSolids();
+                        scene.clearSolids();
+                        scene.getCamera().setPosition(new Vector3(0.25F,1.5F,-1.5F));
+                        scene.getCamera().setPitch(20F);
+                        scene.getCamera().setYaw(10F);
                         populateSphereTriangle(scene, 7);
 
                         scene.addSolid(new Plane(-1F, new Color(0, 0, 0), true,0.25F, 0F));
