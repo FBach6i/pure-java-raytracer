@@ -58,14 +58,12 @@ public class Renderer {
      * @param resolution (Floating point greater than 0 and lower or equal to 1) Controls the number of rays traced. (1 = Every pixel is ray-traced)
      */
     public void renderScene(Scene scene, Graphics gfx, int width, int height, float resolution) {
-        //renderScene(scene, new SuperSampler(), gfx, width, height, resolution);
         renderScene(scene, _pixelSampler, gfx, width, height, resolution);
     }
 
     public static void renderScene(Scene scene, PixelSampler sampler, Graphics gfx, int width, int height, float resolution) {
         int blockSize = (int) (1/resolution);
-        //sampler.setPixelBlockSize(0.2F);
-        sampler.setPixelBlockSize(0.0029391804F);
+        sampler.setPixelBlockSize(getNormalizedBlockSize(blockSize, width, height));
 
         for (int x = 0; x<width; x+=blockSize) {
             for (int y = 0; y<height; y+=blockSize) {
@@ -113,6 +111,14 @@ public class Renderer {
         }
 
         return new float[]{u, v};
+    }
+
+    public static float getNormalizedBlockSize(int blockSize, int width, int height) {
+        if (width > height) {
+            return 1F/(height/2);
+        } else {
+            return 1F/(width/2);
+        }
     }
 
     public static PixelData computePixelInfo(Scene scene, float u, float v) {
