@@ -34,9 +34,11 @@ import carlvbn.raytracing.solids.Sphere;
 import fbach6i.raytracing.rendering.sampler.AdaptiveSuperSampler;
 import fbach6i.raytracing.rendering.sampler.SuperSampler;
 
-public class SettingsPanel extends JPanel {
+public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
     private int selectedSkyboxIndex;
     private JSpinner spImageWidth, spImageHeight;
+    private JButton _btnRenderImage;
+    private JCheckBox _cbxRealTimeRayTracing;
 
     public SettingsPanel(Viewport viewport, JDialog animationDialog) {
         JSlider sdResolution;
@@ -57,7 +59,7 @@ public class SettingsPanel extends JPanel {
         JComboBox<String> cbSampler;
         JComboBox<String> cbScene, cbSkybox;
         JLabel lbOutRes;
-        JButton btnRenderImage, btnShowAnimationDialog;
+        JButton btnShowAnimationDialog;
         JCheckBox cbxPostProcessing;
         JLabel lbBloomRadius;
         JSlider sdBloomRadius;
@@ -290,6 +292,21 @@ public class SettingsPanel extends JPanel {
         gbPanel0.setConstraints(lbSampler, gbc);
         this.add(lbSampler);
 
+        _cbxRealTimeRayTracing = new JCheckBox("Real-Time Ray-Tracing");
+        gbc.gridx = 1;
+        gbc.gridy = 18;
+        gbc.gridwidth = 2;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(5,1,5,0);
+        gbPanel0.setConstraints(_cbxRealTimeRayTracing, gbc);
+        this.add(_cbxRealTimeRayTracing);
+        _cbxRealTimeRayTracing.setSelected(true);
+
+
         cbSampler = new JComboBox<String>();
         cbSampler.addItem("Single Ray Sampler");
         cbSampler.addItem("Multi Ray Sampler - Supersampler");
@@ -473,7 +490,7 @@ public class SettingsPanel extends JPanel {
         gbPanel0.setConstraints(spImageHeight, gbc);
         this.add(spImageHeight);
 
-        btnRenderImage = new JButton("Render image");
+        _btnRenderImage = new JButton("Render image");
         gbc.gridx = 0;
         gbc.gridy = 29;
         gbc.gridwidth = 2;
@@ -483,8 +500,10 @@ public class SettingsPanel extends JPanel {
         gbc.weighty = 1;
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.insets = new Insets(5,4,0,4);
-        gbPanel0.setConstraints(btnRenderImage, gbc);
-        this.add(btnRenderImage);
+        gbPanel0.setConstraints(_btnRenderImage, gbc);
+        _btnRenderImage.setEnabled(false);
+        this.add(_btnRenderImage);
+        
 
         btnShowAnimationDialog = new JButton("Show animation dialog");
         gbc.gridx = 0;
@@ -652,7 +671,7 @@ public class SettingsPanel extends JPanel {
             }
         });
 
-        btnRenderImage.addActionListener(e -> {
+        _btnRenderImage.addActionListener(e -> {
             try {
                 viewport.renderToImage(getOutputWidth(), getOutputHeight());
             } catch (IOException ex) {
@@ -669,6 +688,13 @@ public class SettingsPanel extends JPanel {
             sdBloomIntensity.setEnabled(checked);
             lbBloomRadius.setEnabled(checked);
             lbBloomIntensity.setEnabled(checked);
+
+        });
+
+        _cbxRealTimeRayTracing.addChangeListener(e -> {
+            boolean checked = _cbxRealTimeRayTracing.isSelected();
+            viewport.setRealTimeRayTracingEnabled(checked);
+
 
         });
 
@@ -715,5 +741,16 @@ public class SettingsPanel extends JPanel {
 
     public int getOutputHeight() {
         return (int) spImageHeight.getValue();
+    }
+
+    @Override
+    public void realtimeRenderingIsOn() {
+        _btnRenderImage.setEnabled(false);
+        _cbxRealTimeRayTracing.setSelected(true);
+    }
+
+    @Override
+    public void realtimeRenderingIsOff() {
+        _btnRenderImage.setEnabled(true);        
     }
 }

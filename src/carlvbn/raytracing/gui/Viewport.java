@@ -1,20 +1,37 @@
 package carlvbn.raytracing.gui;
 
-import carlvbn.raytracing.math.*;
-import carlvbn.raytracing.pixeldata.Color;
-import carlvbn.raytracing.rendering.*;
-import carlvbn.raytracing.rendering.Renderer;
-import carlvbn.raytracing.solids.*;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import carlvbn.raytracing.math.Vector3;
+import carlvbn.raytracing.pixeldata.Color;
+import carlvbn.raytracing.rendering.Camera;
+import carlvbn.raytracing.rendering.Renderer;
+import carlvbn.raytracing.rendering.Scene;
+import carlvbn.raytracing.solids.Plane;
+import carlvbn.raytracing.solids.Sphere;
 
 public class Viewport extends JPanel {
     private JFrame frame;
@@ -39,6 +56,8 @@ public class Viewport extends JPanel {
     private Vector3 cameraPosition;
 
     private Renderer _renderer;
+    private boolean _renderRealtime = true; 
+    private RealtimeEnabledListener _realtimeEnabledListener;
 
     public Viewport(JFrame container, JDialog settingsDialog) {
         setFocusable(true);
@@ -172,8 +191,22 @@ public class Viewport extends JPanel {
         return _renderer; 
     }
 
+    public void setRealtimeEnabledListener(RealtimeEnabledListener listener) {
+        _realtimeEnabledListener = listener;
+    }
+
     public void runMainLoop() {
         while (true) {
+            while (!_renderRealtime) {
+                try {
+                    Thread.sleep(1000);
+                    _realtimeEnabledListener.realtimeRenderingIsOff();
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            _realtimeEnabledListener.realtimeRenderingIsOn();
             long startTime = System.currentTimeMillis();
             if (cameraMotion.length() != 0) {
                 cameraPosition.translate(cameraMotion.rotateYP(camera.getYaw(), 0).multiply(deltaTime/50F*movementSpeed));
@@ -259,16 +292,23 @@ public class Viewport extends JPanel {
     }
 
     public void renderToImage(int width, int height) throws IOException {
+        _renderRealtime = false;
+
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         System.out.println("Rendering to image...");
+
         if (postProcessing) Renderer.renderScenePostProcessed(scene, image.getGraphics(), width, height, 1F);
         else _renderer.renderScene(scene, image.getGraphics(), width, height, 1F);
 
-        File imgFile = new File("output.png");
+        long time = System.currentTimeMillis() / 10_000;
+
+        File imgFile = new File("output_" + time +".png");
         ImageIO.write(image, "PNG", new FileOutputStream(imgFile));
         System.out.println("Image saved.");
 
         Desktop.getDesktop().open(imgFile);
+
+        _renderRealtime = true;
     }
 
     public void setMouseSensitivity(float sensitivity) {
@@ -297,6 +337,10 @@ public class Viewport extends JPanel {
 
     public void setPostProcessingEnabled(boolean postProcessing) {
         this.postProcessing = postProcessing;
+    }
+
+    public void setRealTimeRayTracingEnabled(boolean renderRealtime){
+        _renderRealtime = renderRealtime;
     }
 
     public Scene getScene() {

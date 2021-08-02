@@ -40,6 +40,8 @@ public class Main {
 
         SettingsPanel settingsPanel = new SettingsPanel(viewport, animationDialog);
 
+        viewport.setRealtimeEnabledListener(settingsPanel);
+
         animationDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         animationDialog.setSize(300, 150);
         animationDialog.add(new AnimationPanel(viewport, settingsPanel));
