@@ -26,13 +26,8 @@ public class AdaptiveSuperSampler extends MultiRaySampler {
         _scene = scene;
         _recursionLimit = recursionLimit;
     }
-
-    @Override
-    public PixelData samplePixel(Scene scene, float u, float v) {
-        Quadrant pixel = new Quadrant(new Vector2(u,v), _pixelBlockSize);
-        PixelData pixelInfo = sample(pixel, _recursionLimit, _recursionCount);
-
-        // **** analytic info ***
+    
+    public void logAnalytics(float u, float v) {
         if (_recursionCount.getCount() != 0) {
             throw new Error("recursion count inconsistency!");
         }
@@ -52,8 +47,13 @@ public class AdaptiveSuperSampler extends MultiRaySampler {
         }
         _pixelCount++;
         _recursionCount.reset();
-        // **** end analytic info ***
+    }
 
+    @Override
+    public PixelData samplePixel(Scene scene, float u, float v) {
+        Quadrant pixel = new Quadrant(new Vector2(u,v), _pixelBlockSize);
+        PixelData pixelInfo = sample(pixel, _recursionLimit, _recursionCount);
+        logAnalytics(u, v);
         return pixelInfo;
     }
 
