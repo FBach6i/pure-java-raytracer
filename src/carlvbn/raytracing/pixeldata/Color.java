@@ -146,6 +146,11 @@ public class Color {
         return new Color(lerp(a.getRed(), b.getRed(), t), lerp(a.getGreen(), b.getGreen(), t), lerp(a.getBlue(), b.getBlue(), t));
     }
 
+    public boolean isSimilarTo(Color otherColor, float epsilon) {
+        float euclideanDistanceSquared = (red-otherColor.red) * (red-otherColor.red) + (green - otherColor.green) * (green - otherColor.green) + (blue - otherColor.blue) * (blue - otherColor.blue);
+        return (euclideanDistanceSquared <= epsilon); 
+    }
+
     public static final Color BLACK = new Color(0F,0F,0F);
     public static final Color WHITE = new Color(1F, 1F, 1F);
     public static final Color RED = new Color(1F, 0F, 0F);

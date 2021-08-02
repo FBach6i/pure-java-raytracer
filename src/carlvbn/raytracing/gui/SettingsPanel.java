@@ -31,6 +31,7 @@ import carlvbn.raytracing.rendering.Skybox;
 import carlvbn.raytracing.rendering.sampler.SingleRaySampler;
 import carlvbn.raytracing.solids.Plane;
 import carlvbn.raytracing.solids.Sphere;
+import fbach6i.raytracing.rendering.sampler.AdaptiveSuperSampler;
 import fbach6i.raytracing.rendering.sampler.SuperSampler;
 
 public class SettingsPanel extends JPanel {
@@ -641,8 +642,10 @@ public class SettingsPanel extends JPanel {
                         renderer.setPixelSampler(new SingleRaySampler());
                         break;
                     case 1: 
-                        renderer.setPixelSampler(new SuperSampler());
+                        renderer.setPixelSampler(new SuperSampler(7));
                         break;
+                    case 2: 
+                        renderer.setPixelSampler(new AdaptiveSuperSampler(viewport.getScene(),2));
                     default:
                         break;
                 }
