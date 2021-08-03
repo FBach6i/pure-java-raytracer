@@ -20,7 +20,7 @@ public class SuperSampler extends MultiRaySampler {
     @Override
     public PixelData samplePixel(Scene scene, float u, float v) {
         Quadrant pixel = new Quadrant(new Vector2(u,v), _pixelBlockSize);
-        ArrayList<Vector2> samplePoints = pixel.getSamplePoints(_gridDimension);
+        ArrayList<Vector2> samplePoints = pixel.getUniformSamplePoints(_gridDimension);
         ArrayList<Color> rayColors = new ArrayList<Color>();
 
 

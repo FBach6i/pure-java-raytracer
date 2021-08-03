@@ -1,20 +1,49 @@
 package fbach6i.raytracing.rendering.sampler.math;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+
 public class QuadrantTest {
     
+    public void testUniformSamplePoints() {
+        Quadrant quadrant1 = new Quadrant(new Vector2(0,0), 4);
+        ArrayList<Vector2> uniformSamplePoints = quadrant1.getUniformSamplePoints(4);
+
+        Vector2[] expectedResult = {
+            new Vector2(-1.5F,-1.5F), 
+            new Vector2(-0.5F,-1.5F),
+            new Vector2(0.5F,-1.5F),
+            new Vector2(1.5F,-1.5F),
+            new Vector2(-1.5F,-0.5F), 
+            new Vector2(-0.5F,-0.5F), 
+            new Vector2(0.5F,-0.5F), 
+            new Vector2(1.5F,-0.5F), 
+            new Vector2(-1.5F,0.5F), 
+            new Vector2(-0.5F,0.5F), 
+            new Vector2(0.5F,0.5F), 
+            new Vector2(1.5F,0.5F), 
+            new Vector2(-1.5F,1.5F), 
+            new Vector2(-0.5F,1.5F), 
+            new Vector2(0.5F,1.5F), 
+            new Vector2(1.5F,1.5F)        
+        };
+
+        ArrayList<Vector2> expectedUniformSamplePoints = new ArrayList<>(Arrays.asList(expectedResult));
+
+        if (!uniformSamplePoints.equals(expectedUniformSamplePoints)) { 
+            throw new Error("uniform sample points test failed, actual elements " + expectedUniformSamplePoints + " vs. expected " + uniformSamplePoints);
+        } else {
+            System.out.println(uniformSamplePoints);
+        }
+    }
+
     public static void main(String[] args) {
-        Quadrant quadrant1 = new Quadrant(new Vector2(-1.86F,0.61F),0.002939F);
-        //System.out.println(quadrant1.getTopLeftCorner());
-        //System.out.println(quadrant1.getTopRightCorner());
-        //System.out.println(quadrant1.getBottomLeftCorner());
-        //System.out.println(quadrant1.getBottomRightCorner());
-        //System.out.println(quadrant1.getTopRightSubquadrant());
-        //System.out.println(quadrant1.getTopLeftSubquadrant());
-        //System.out.println(quadrant1.getBottomRightSubquadrant());
-        //System.out.println(quadrant1.getBottomLeftSubquadrant());
+        QuadrantTest test = new QuadrantTest();
+        test.testUniformSamplePoints();
 
-        System.out.println(quadrant1.getSamplePoints(9));
-
+        Quadrant quadrant1 = new Quadrant(new Vector2(0,0), 4);
+        System.out.println(quadrant1.getStratifiedSamplePoints(4, new Random()));
     }
 
 }

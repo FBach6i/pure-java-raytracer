@@ -1,6 +1,7 @@
 package fbach6i.raytracing.rendering.sampler.math;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Quadrant {
     private Vector2 _center;
@@ -31,7 +32,7 @@ public class Quadrant {
         return _center.add(cornerOffset);
     }
     
-    public ArrayList<Vector2> getSamplePoints(int gridDimension){
+    public ArrayList<Vector2> getUniformSamplePoints(int gridDimension){
         ArrayList<Vector2> result = new ArrayList<Vector2>();
         Vector2 startingpoint = this.getBottomLeftCorner();
         Vector2 horizontalOffset = new Vector2(_size/gridDimension,0);
@@ -47,6 +48,24 @@ public class Quadrant {
         }
         
         return result;
+    }
+
+    public ArrayList<Vector2> getStratifiedSamplePoints(int gridDimension, Random random) {
+        ArrayList<Vector2> uniformSamplePoints = getUniformSamplePoints(gridDimension);
+        ArrayList<Vector2> stratifiedSamplePoints = new ArrayList<>();
+
+        int divider = 2 * gridDimension;
+
+        for (Vector2 samplePoint : uniformSamplePoints) {
+            float xOffset = random.nextFloat();
+            if (xOffset < 0.5) { xOffset = -xOffset; }
+            float yOffset = random.nextFloat();
+            if (yOffset < 0.5) { yOffset = -yOffset; }
+            Vector2 offset = new Vector2((xOffset *_size / divider), (yOffset * _size / divider));
+            stratifiedSamplePoints.add(samplePoint.add(offset));
+        }
+
+        return stratifiedSamplePoints;
     }
 
     public Vector2 getCenter(){
