@@ -7,32 +7,60 @@ public class Quadrant {
     private Vector2 _center;
     private float _size;
 
-    public Quadrant(Vector2 center, float size){
+    public Quadrant(Vector2 center, float size) {
         _center = center; 
         _size = size;
     }
 
-    public Vector2 getTopRightCorner(){
-        Vector2 cornerOffset = new Vector2(_size/2,_size/2);
-        return _center.add(cornerOffset);
-    }
-
-    public Vector2 getTopLeftCorner(){
+    public Vector2 getTopLeftCorner() {
         Vector2 cornerOffset = new Vector2(-_size/2,_size/2);
         return _center.add(cornerOffset);
     }
 
-    public Vector2 getBottomLeftCorner(){
+    public Vector2 getTopLeftCornerStratified(Random random) {
+        Vector2 corner = getTopLeftCorner();
+        Vector2 cornerOffset = new Vector2((random.nextFloat() * _size/4), -(random.nextFloat() * _size/4));
+        Vector2 cornerStratified = corner.add(cornerOffset);
+        return cornerStratified;
+    }
+
+    public Vector2 getTopRightCorner() {
+        Vector2 cornerOffset = new Vector2(_size/2,_size/2);
+        return _center.add(cornerOffset);
+    }
+
+    public Vector2 getTopRightCornerStratified(Random random) {
+        Vector2 corner = getTopRightCorner();
+        Vector2 cornerOffset = new Vector2(-(random.nextFloat() * _size/4), -(random.nextFloat() * _size/4));
+        Vector2 cornerStratified = corner.add(cornerOffset);
+        return cornerStratified;
+    }
+
+    public Vector2 getBottomLeftCorner() {
         Vector2 cornerOffset = new Vector2(-_size/2,-_size/2);
         return _center.add(cornerOffset);
     }
 
-    public Vector2 getBottomRightCorner(){
+    public Vector2 getBottomLeftCornerStratified(Random random) {
+        Vector2 corner = getBottomLeftCorner();
+        Vector2 cornerOffset = new Vector2((random.nextFloat() * _size/4), (random.nextFloat() * _size/4));
+        Vector2 cornerStratified = corner.add(cornerOffset);
+        return cornerStratified;
+    }
+
+    public Vector2 getBottomRightCorner() {
         Vector2 cornerOffset = new Vector2(_size/2,-_size/2);
         return _center.add(cornerOffset);
     }
+
+    public Vector2 getBottomRightCornerStratified(Random random) {
+        Vector2 corner = getBottomRightCorner();
+        Vector2 cornerOffset = new Vector2(-(random.nextFloat() * _size/4), (random.nextFloat() * _size/4));
+        Vector2 cornerStratified = corner.add(cornerOffset);
+        return cornerStratified;
+    }
     
-    public ArrayList<Vector2> getUniformSamplePoints(int gridDimension){
+    public ArrayList<Vector2> getUniformSamplePoints(int gridDimension) {
         ArrayList<Vector2> result = new ArrayList<Vector2>();
         Vector2 startingpoint = this.getBottomLeftCorner();
         Vector2 horizontalOffset = new Vector2(_size/gridDimension,0);
@@ -68,19 +96,11 @@ public class Quadrant {
         return stratifiedSamplePoints;
     }
 
-    public Vector2 getCenter(){
+    public Vector2 getCenter() {
         return _center;
     }
 
-    public Quadrant getTopRightSubquadrant(){
-        Vector2 centerOffset = new Vector2(_size/4F, _size/4F);
-        Vector2 newCenter = _center.add(centerOffset);
-        float newSize = _size/2;
-        Quadrant topRightSubquadrant = new Quadrant(newCenter, newSize);
-        return topRightSubquadrant; 
-    }
-
-    public Quadrant getTopLeftSubquadrant(){
+    public Quadrant getTopLeftSubquadrant() {
         Vector2 centerOffset = new Vector2(-_size/4F, _size/4F);
         Vector2 newCenter = _center.add(centerOffset);
         float newSize = _size/2;
@@ -88,7 +108,15 @@ public class Quadrant {
         return topLeftSubquadrant; 
     }
 
-    public Quadrant getBottomRightSubquadrant(){
+    public Quadrant getTopRightSubquadrant() {
+        Vector2 centerOffset = new Vector2(_size/4F, _size/4F);
+        Vector2 newCenter = _center.add(centerOffset);
+        float newSize = _size/2;
+        Quadrant topRightSubquadrant = new Quadrant(newCenter, newSize);
+        return topRightSubquadrant; 
+    }
+
+    public Quadrant getBottomRightSubquadrant() {
         Vector2 centerOffset = new Vector2(_size/4F,-_size/4F);
         Vector2 newCenter = _center.add(centerOffset);
         float newSize = _size/2;
@@ -96,7 +124,7 @@ public class Quadrant {
         return bottomRightSubquadrant; 
     }
 
-    public Quadrant getBottomLeftSubquadrant(){
+    public Quadrant getBottomLeftSubquadrant() {
         Vector2 centerOffset = new Vector2(-_size/4F,-_size/4F);
         Vector2 newCenter = _center.add(centerOffset);
         float newSize = _size/2;
@@ -106,7 +134,7 @@ public class Quadrant {
 
     @Override
     public String toString() {
-        return "" + _center + " and size:" + _size;
+        return "Quadrant with center: " + _center + " and size: " + _size;
     }
     
 }
