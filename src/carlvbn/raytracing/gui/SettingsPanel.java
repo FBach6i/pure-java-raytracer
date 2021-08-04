@@ -32,6 +32,7 @@ import carlvbn.raytracing.rendering.sampler.SingleRaySampler;
 import carlvbn.raytracing.solids.Plane;
 import carlvbn.raytracing.solids.Sphere;
 import fbach6i.raytracing.rendering.sampler.AdaptiveSuperSampler;
+import fbach6i.raytracing.rendering.sampler.StochasticSuperSampler;
 import fbach6i.raytracing.rendering.sampler.SuperSampler;
 
 public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
@@ -665,10 +666,13 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
                         break;
                     case 2: 
                         renderer.setPixelSampler(new AdaptiveSuperSampler(viewport.getScene(),2));
+                        break;
+                    case 3: 
+                        renderer.setPixelSampler(new StochasticSuperSampler(7, new Random()));
                     default:
                         break;
                 }
-            }
+            } 
         });
 
         _btnRenderImage.addActionListener(e -> {
