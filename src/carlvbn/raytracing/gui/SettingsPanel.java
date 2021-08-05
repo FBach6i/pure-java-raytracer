@@ -35,11 +35,12 @@ import fbach6i.raytracing.rendering.sampler.AdaptiveStochasticSuperSampler;
 import fbach6i.raytracing.rendering.sampler.AdaptiveSuperSampler;
 import fbach6i.raytracing.rendering.sampler.StochasticSuperSampler;
 import fbach6i.raytracing.rendering.sampler.SuperSampler;
+import fbach6i.raytracing.rendering.sampler.math.Vector2;
 
 public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
     private int selectedSkyboxIndex;
-    private JSpinner spImageWidth, spImageHeight;
-    private JButton _btnRenderImage;
+    private JSpinner spImageWidth, spImageHeight, spTopLeftClipXCoordinate, spTopLeftClipYCoordinate, spBottomRightClipXCoordinate, spBottomRightClipYCoordinate;
+    private JButton _btnRenderImage, _btnRenderClipImage;
     private JCheckBox _cbxRealTimeRayTracing;
 
     public SettingsPanel(Viewport viewport, JDialog animationDialog) {
@@ -60,7 +61,7 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
         JLabel lbSampler;
         JComboBox<String> cbSampler;
         JComboBox<String> cbScene, cbSkybox;
-        JLabel lbOutRes;
+        JLabel lbOutRes, lbOutClip;
         JButton btnShowAnimationDialog;
         JCheckBox cbxPostProcessing;
         JLabel lbBloomRadius;
@@ -507,10 +508,96 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
         _btnRenderImage.setEnabled(false);
         this.add(_btnRenderImage);
         
+        lbOutClip = new JLabel("Output Clip Coordinates");
+        gbc.gridx = 0;
+        gbc.gridy = 30;
+        gbc.gridwidth = 2;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(10,5,0,0);
+        gbPanel0.setConstraints(lbOutClip, gbc);
+        this.add(lbOutClip);
+
+        SpinnerModel spTopLeftClipXCoordinateModel = new SpinnerNumberModel(0, 0, 100000, 1);
+        spTopLeftClipXCoordinate= new JSpinner(spTopLeftClipXCoordinateModel);
+        spTopLeftClipXCoordinate.setEditor(new JSpinner.NumberEditor(spTopLeftClipXCoordinate, "#"));
+        gbc.gridx = 0;
+        gbc.gridy = 31;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(0,5,0,0);
+        gbPanel0.setConstraints(spTopLeftClipXCoordinate, gbc);
+        this.add(spTopLeftClipXCoordinate);
+
+        SpinnerModel spTopLeftClipYCoordinateModel = new SpinnerNumberModel(1080, 0, 100000, 1);
+        spTopLeftClipYCoordinate = new JSpinner(spTopLeftClipYCoordinateModel);
+        spTopLeftClipYCoordinate.setEditor(new JSpinner.NumberEditor(spTopLeftClipYCoordinate, "#"));
+        gbc.gridx = 1;
+        gbc.gridy = 31;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(0,5,0,5);
+        gbPanel0.setConstraints(spTopLeftClipYCoordinate, gbc);
+        this.add(spTopLeftClipYCoordinate);
+
+        SpinnerModel spBottomRightClipXCoordinateModel = new SpinnerNumberModel(0, 0, 100000, 1);
+        spBottomRightClipXCoordinate= new JSpinner(spBottomRightClipXCoordinateModel);
+        spBottomRightClipXCoordinate.setEditor(new JSpinner.NumberEditor(spBottomRightClipXCoordinate, "#"));
+        gbc.gridx = 0;
+        gbc.gridy = 32;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(0,5,0,0);
+        gbPanel0.setConstraints(spBottomRightClipXCoordinate, gbc);
+        this.add(spBottomRightClipXCoordinate);
+
+        SpinnerModel spBottomRightClipYCoordinateModel = new SpinnerNumberModel(1080, 0, 100000, 1);
+        spBottomRightClipYCoordinate = new JSpinner(spBottomRightClipYCoordinateModel);
+        spBottomRightClipYCoordinate.setEditor(new JSpinner.NumberEditor(spBottomRightClipYCoordinate, "#"));
+        gbc.gridx = 1;
+        gbc.gridy = 32;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(0,5,0,5); 
+        gbPanel0.setConstraints(spBottomRightClipYCoordinate, gbc);
+        this.add(spBottomRightClipYCoordinate);
+
+        _btnRenderClipImage = new JButton("Render Clip image");
+        gbc.gridx = 0;
+        gbc.gridy = 33;
+        gbc.gridwidth = 2;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(5,4,0,4);
+        gbPanel0.setConstraints(_btnRenderClipImage, gbc);
+        _btnRenderClipImage.setEnabled(false);
+        this.add(_btnRenderClipImage);
 
         btnShowAnimationDialog = new JButton("Show animation dialog");
         gbc.gridx = 0;
-        gbc.gridy = 30;
+        gbc.gridy = 34;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -689,6 +776,20 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
                 JOptionPane.showMessageDialog(viewport, ex.toString(), "Could not save image", JOptionPane.ERROR_MESSAGE);
             }
         });
+                
+        _btnRenderClipImage.addActionListener(e -> {
+            try {
+                viewport.renderToImageClip(
+                    getOutputWidth(), 
+                    getOutputHeight(), 
+                    new Vector2((int)spTopLeftClipXCoordinate.getValue(), (int)spTopLeftClipYCoordinateModel.getValue()), 
+                    new Vector2((int)spBottomRightClipXCoordinate.getValue(), (int)spBottomRightClipYCoordinate.getValue())
+                );
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(viewport, ex.toString(), "Could not save image", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         cbxPostProcessing.addChangeListener(e -> {
             boolean checked = cbxPostProcessing.isSelected();
@@ -756,11 +857,13 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
     @Override
     public void realtimeRenderingIsOn() {
         _btnRenderImage.setEnabled(false);
+        _btnRenderClipImage.setEnabled(false); 
         _cbxRealTimeRayTracing.setSelected(true);
     }
 
     @Override
     public void realtimeRenderingIsOff() {
-        _btnRenderImage.setEnabled(true);        
+        _btnRenderImage.setEnabled(true);
+        _btnRenderClipImage.setEnabled(true);        
     }
 }

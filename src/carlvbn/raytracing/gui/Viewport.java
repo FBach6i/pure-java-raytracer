@@ -32,6 +32,7 @@ import carlvbn.raytracing.rendering.Renderer;
 import carlvbn.raytracing.rendering.Scene;
 import carlvbn.raytracing.solids.Plane;
 import carlvbn.raytracing.solids.Sphere;
+import fbach6i.raytracing.rendering.sampler.math.Vector2;
 
 public class Viewport extends JPanel {
     private JFrame frame;
@@ -305,6 +306,34 @@ public class Viewport extends JPanel {
         File imgFile = new File("output_" + time +".png");
         ImageIO.write(image, "PNG", new FileOutputStream(imgFile));
         System.out.println("Image saved.");
+
+        Desktop.getDesktop().open(imgFile);
+
+        _renderRealtime = true;
+    }
+
+    public void renderToImageClip(int fullImageWidth, int fullImageHeight, Vector2 clipImageTopLeft, Vector2 clipImageBottomRight) throws IOException {
+        _renderRealtime = false;
+
+        if (!((clipImageTopLeft.getXCoordinate() < clipImageBottomRight.getXCoordinate()) && (clipImageBottomRight.getXCoordinate() < fullImageWidth)) 
+        || !((clipImageTopLeft.getYCoordinate() < clipImageBottomRight.getYCoordinate()) && (clipImageBottomRight.getYCoordinate() < fullImageHeight))) {
+            throw new Error("Clip Area non-valid: topLeft" + clipImageTopLeft + " bottomRight" + clipImageBottomRight);
+        }
+
+        int clipWidth = (int) (clipImageBottomRight.getXCoordinate() - clipImageTopLeft.getXCoordinate());
+        int clipHeight =(int) (clipImageBottomRight.getYCoordinate() - clipImageTopLeft.getYCoordinate());
+
+        BufferedImage image = new BufferedImage(clipWidth, clipHeight, BufferedImage.TYPE_INT_RGB);
+        System.out.println("Rendering to image-clip... ");
+
+        if (postProcessing) Renderer.renderScenePostProcessed(scene, image.getGraphics(), fullImageWidth, fullImageHeight, 1F);
+        else _renderer.renderSceneClip(scene, image.getGraphics(), fullImageWidth, fullImageHeight, clipImageTopLeft, clipImageBottomRight);
+
+        long time = System.currentTimeMillis() / 10_000;
+
+        File imgFile = new File("output_clip" + time +".png");
+        ImageIO.write(image, "PNG", new FileOutputStream(imgFile));
+        System.out.println("Image-clip " + clipImageTopLeft + " " + clipImageBottomRight + " saved.");
 
         Desktop.getDesktop().open(imgFile);
 

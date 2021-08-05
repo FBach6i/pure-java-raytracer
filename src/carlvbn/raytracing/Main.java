@@ -48,7 +48,7 @@ public class Main {
         animationDialog.setLocationRelativeTo(frame);
 
         settingsDialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
-        settingsDialog.setSize(350, 600);
+        settingsDialog.setSize(450, 800);
         settingsDialog.add(settingsPanel);
         settingsDialog.setVisible(true);
 

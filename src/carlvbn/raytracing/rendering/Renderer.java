@@ -11,6 +11,7 @@ import carlvbn.raytracing.pixeldata.PixelBuffer;
 import carlvbn.raytracing.pixeldata.PixelData;
 import carlvbn.raytracing.rendering.sampler.SingleRaySampler;
 import carlvbn.raytracing.solids.Solid;
+import fbach6i.raytracing.rendering.sampler.math.Vector2;
 
 public class Renderer {
     private static final float GLOBAL_ILLUMINATION = 0.3F;
@@ -72,6 +73,29 @@ public class Renderer {
 
                 gfx.setColor(pixelData.getColor().toAWTColor());
                 gfx.fillRect(x, y, blockSize, blockSize);
+            }
+        }
+    }
+
+    /** 
+     * Clips are only to be used in image rendering to file -> resolution is always 1.
+     */
+    public void renderSceneClip(Scene scene, Graphics gfx, int fullImageWidth, int fullImageHeight, Vector2 clipImageTopLeft, Vector2 clipImageBottomRight) {
+        renderSceneClip(scene, _pixelSampler, gfx, fullImageWidth, fullImageHeight, clipImageTopLeft, clipImageBottomRight);
+    }
+
+    public static void renderSceneClip(Scene scene, PixelSampler sampler, Graphics gfx, int fullImageWidth, int fullImageHeight, Vector2 clipImageTopLeft, Vector2 clipImageBottomRight) {
+
+        int clipRootXCoordinate = (int)clipImageTopLeft.getXCoordinate();
+        int clipRootYCoordinate = (int)clipImageTopLeft.getYCoordinate();
+        
+        for (int x=clipRootXCoordinate; x < clipImageBottomRight.getXCoordinate(); x++) {
+            for (int y = clipRootYCoordinate; y < clipImageBottomRight.getYCoordinate(); y++) {
+                float[] uv = getNormalizedScreenCoordinates(x, y, fullImageWidth, fullImageHeight);
+                PixelData pixelData = sampler.samplePixel(scene, uv[0], uv[1]);
+
+                gfx.setColor(pixelData.getColor().toAWTColor());
+                gfx.fillRect(x-clipRootXCoordinate, y-clipRootYCoordinate, 1, 1);
             }
         }
     }
