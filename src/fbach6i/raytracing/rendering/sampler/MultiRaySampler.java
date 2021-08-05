@@ -6,7 +6,7 @@ import carlvbn.raytracing.rendering.Scene;
 
 public abstract class MultiRaySampler implements PixelSampler {
     
-    protected float _pixelBlockSize; 
+    protected float _pixelBlockSize = 1; 
 
     @Override
     public void setPixelBlockSize(float blockSize) {
