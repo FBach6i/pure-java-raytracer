@@ -31,6 +31,7 @@ import carlvbn.raytracing.rendering.Skybox;
 import carlvbn.raytracing.rendering.sampler.SingleRaySampler;
 import carlvbn.raytracing.solids.Plane;
 import carlvbn.raytracing.solids.Sphere;
+import fbach6i.raytracing.rendering.sampler.AdaptiveStochasticSuperSampler;
 import fbach6i.raytracing.rendering.sampler.AdaptiveSuperSampler;
 import fbach6i.raytracing.rendering.sampler.StochasticSuperSampler;
 import fbach6i.raytracing.rendering.sampler.SuperSampler;
@@ -313,6 +314,7 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
         cbSampler.addItem("Multi Ray Sampler - Supersampler");
         cbSampler.addItem("Multi Ray Sampler - Adaptive Supersampler");
         cbSampler.addItem("Multi Ray Sampler - Stochastic Supersampler");
+        cbSampler.addItem("Multi Ray Sampler - Adaptive Stochastic Supersampler");
         cbSampler.setSelectedIndex(0);
         gbc.gridx = 0;
         gbc.gridy = 18;
@@ -669,6 +671,10 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
                         break;
                     case 3: 
                         renderer.setPixelSampler(new StochasticSuperSampler(7, new Random()));
+                        break;
+                    case 4: 
+                        renderer.setPixelSampler(new AdaptiveStochasticSuperSampler(viewport.getScene(), 2, new Random()));
+                        break;
                     default:
                         break;
                 }

@@ -82,5 +82,4 @@ public class AdaptiveStochasticSuperSampler extends MultiRaySampler {
 
         return new PixelData(Color.average(rayColors),0,0);
     }
-    
 }

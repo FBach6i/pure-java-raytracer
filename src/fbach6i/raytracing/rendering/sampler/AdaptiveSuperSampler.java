@@ -46,7 +46,6 @@ public class AdaptiveSuperSampler extends MultiRaySampler {
             _numberOfPixelsCalculatedRecursively = 0;
         }
         _pixelCount++;
-        _recursionCount.reset();
     }
 
     @Override
@@ -54,16 +53,23 @@ public class AdaptiveSuperSampler extends MultiRaySampler {
         Quadrant pixel = new Quadrant(new Vector2(u,v), _pixelBlockSize);
         PixelData pixelInfo = sample(pixel, _recursionLimit, _recursionCount);
         logAnalytics(u, v);
+        _recursionCount.reset();
         return pixelInfo;
     }
 
     private PixelData sample(Quadrant q, int recursionLimit, RecursionCount recursionCount) {
 
         PixelData pixelInfoCenter = Renderer.computePixelInfo(_scene,q.getCenter().getXCoordinate(), q.getCenter().getYCoordinate());
-        PixelData pixelInfoTopLeftCorner = Renderer.computePixelInfo(_scene, q.getTopLeftCorner().getXCoordinate(), q.getTopLeftCorner().getYCoordinate());
-        PixelData pixelInfoTopRightCorner = Renderer.computePixelInfo(_scene, q.getTopRightCorner().getXCoordinate(), q.getTopRightCorner().getYCoordinate());
-        PixelData pixelInfoBottomRightCorner = Renderer.computePixelInfo(_scene, q.getBottomRightCorner().getXCoordinate(), q.getBottomRightCorner().getYCoordinate());
-        PixelData pixelInfoBottomLeftCorner = Renderer.computePixelInfo(_scene, q.getBottomLeftCorner().getXCoordinate(), q.getBottomLeftCorner().getYCoordinate());
+
+        Vector2 topLeftCorner = q.getTopLeftCorner();
+        Vector2 topRightCorner = q.getTopRightCorner();
+        Vector2 bottomLeftCorner = q.getBottomLeftCorner();
+        Vector2 bottomRightCorner = q.getBottomRightCorner();
+
+        PixelData pixelInfoTopLeftCorner = Renderer.computePixelInfo(_scene, topLeftCorner.getXCoordinate(), topLeftCorner.getYCoordinate());
+        PixelData pixelInfoTopRightCorner = Renderer.computePixelInfo(_scene, topRightCorner.getXCoordinate(), topRightCorner.getYCoordinate());
+        PixelData pixelInfoBottomLeftCorner = Renderer.computePixelInfo(_scene, bottomLeftCorner.getXCoordinate(), bottomLeftCorner.getYCoordinate());
+        PixelData pixelInfoBottomRightCorner = Renderer.computePixelInfo(_scene, bottomRightCorner.getXCoordinate(), bottomRightCorner.getYCoordinate());
     
         _overallSamplesTraced += 5;
 
@@ -102,37 +108,6 @@ public class AdaptiveSuperSampler extends MultiRaySampler {
         }
 
         return new PixelData(Color.average(rayColors),0,0);
-    }
-
-    private class RecursionCount {
-
-        private int _recursionCount = 0;
-        private int _maxRecursion = 0;
-
-        public int getCount() {
-            return _recursionCount;
-        }
-
-        public RecursionCount increase() {
-            _recursionCount++;
-            _maxRecursion = Math.max(_maxRecursion, _recursionCount);
-            return this;
-        }
-
-        public RecursionCount decrease() {
-            _recursionCount--;
-            return this;
-        }
-
-        public int getMaxRecursion() {
-            return _maxRecursion;
-        }
-
-        public void reset() {
-            _recursionCount = 0;
-            _maxRecursion = 0;
-        }
-
     }
     
 }
