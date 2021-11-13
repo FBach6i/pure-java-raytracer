@@ -315,8 +315,8 @@ public class Viewport extends JPanel {
     public void renderToImageClip(int fullImageWidth, int fullImageHeight, Vector2 clipImageTopLeft, Vector2 clipImageBottomRight) throws IOException {
         _renderRealtime = false;
 
-        if (!((clipImageTopLeft.getXCoordinate() < clipImageBottomRight.getXCoordinate()) && (clipImageBottomRight.getXCoordinate() < fullImageWidth)) 
-        || !((clipImageTopLeft.getYCoordinate() < clipImageBottomRight.getYCoordinate()) && (clipImageBottomRight.getYCoordinate() < fullImageHeight))) {
+        if (!((clipImageTopLeft.getXCoordinate() < clipImageBottomRight.getXCoordinate()) && (clipImageBottomRight.getXCoordinate() <= fullImageWidth)) 
+        || !((clipImageTopLeft.getYCoordinate() < clipImageBottomRight.getYCoordinate()) && (clipImageBottomRight.getYCoordinate() <= fullImageHeight))) {
             throw new Error("Clip Area non-valid: topLeft" + clipImageTopLeft + " bottomRight" + clipImageBottomRight);
         }
 

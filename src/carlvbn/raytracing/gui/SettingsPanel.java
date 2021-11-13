@@ -521,11 +521,24 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
         gbPanel0.setConstraints(lbOutClip, gbc);
         this.add(lbOutClip);
 
+        lbOutClip = new JLabel("TopLeftClipCoordinate");
+        gbc.gridx = 0;
+        gbc.gridy = 31;
+        gbc.gridwidth = 2;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(10,5,0,0);
+        gbPanel0.setConstraints(lbOutClip, gbc);
+        this.add(lbOutClip);
+
         SpinnerModel spTopLeftClipXCoordinateModel = new SpinnerNumberModel(0, 0, 100000, 1);
         spTopLeftClipXCoordinate= new JSpinner(spTopLeftClipXCoordinateModel);
         spTopLeftClipXCoordinate.setEditor(new JSpinner.NumberEditor(spTopLeftClipXCoordinate, "#"));
         gbc.gridx = 0;
-        gbc.gridy = 31;
+        gbc.gridy = 32;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -540,7 +553,7 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
         spTopLeftClipYCoordinate = new JSpinner(spTopLeftClipYCoordinateModel);
         spTopLeftClipYCoordinate.setEditor(new JSpinner.NumberEditor(spTopLeftClipYCoordinate, "#"));
         gbc.gridx = 1;
-        gbc.gridy = 31;
+        gbc.gridy = 32;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -551,11 +564,24 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
         gbPanel0.setConstraints(spTopLeftClipYCoordinate, gbc);
         this.add(spTopLeftClipYCoordinate);
 
+        lbOutClip = new JLabel("BottomRightClipCoordinate");
+        gbc.gridx = 0;
+        gbc.gridy = 33;
+        gbc.gridwidth = 2;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(10,5,0,0);
+        gbPanel0.setConstraints(lbOutClip, gbc);
+        this.add(lbOutClip);
+
         SpinnerModel spBottomRightClipXCoordinateModel = new SpinnerNumberModel(0, 0, 100000, 1);
         spBottomRightClipXCoordinate= new JSpinner(spBottomRightClipXCoordinateModel);
         spBottomRightClipXCoordinate.setEditor(new JSpinner.NumberEditor(spBottomRightClipXCoordinate, "#"));
         gbc.gridx = 0;
-        gbc.gridy = 32;
+        gbc.gridy = 34;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -570,7 +596,7 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
         spBottomRightClipYCoordinate = new JSpinner(spBottomRightClipYCoordinateModel);
         spBottomRightClipYCoordinate.setEditor(new JSpinner.NumberEditor(spBottomRightClipYCoordinate, "#"));
         gbc.gridx = 1;
-        gbc.gridy = 32;
+        gbc.gridy = 34;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -583,7 +609,7 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
 
         _btnRenderClipImage = new JButton("Render Clip image");
         gbc.gridx = 0;
-        gbc.gridy = 33;
+        gbc.gridy = 35;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -597,7 +623,7 @@ public class SettingsPanel extends JPanel implements RealtimeEnabledListener {
 
         btnShowAnimationDialog = new JButton("Show animation dialog");
         gbc.gridx = 0;
-        gbc.gridy = 34;
+        gbc.gridy = 36;
         gbc.gridwidth = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.BOTH;
